@@ -1,0 +1,496 @@
+@use "./global/app" as *;
+
+// foundation
+@use "./foundation/root";
+@use "./foundation/reset";
+
+// utility
+@use "./other/utility";
+
+// --------------------------
+
+html,
+body {
+  overflow: hidden;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  user-select: none;
+}
+
+// --------------------------
+
+// ローディング
+
+// --------------------------
+.l-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9000;
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  opacity: 1;
+  body[data-loaded="1"] & {
+    pointer-events: none;
+    user-select: none;
+    transition: 0.3s ease opacity;
+    opacity: 0;
+  }
+}
+.l-loading__center {
+  width: max-content;
+  height: max-content;
+  .boxes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: (18px * 5 + 24px);
+    height: 22px;
+    .box {
+      position: relative;
+      z-index: 1;
+      width: 18px;
+      height: 18px;
+      background: var(--black);
+      border: solid 4px var(--white);
+      box-sizing: border-box;
+      span {
+        position: absolute;
+        z-index: 0;
+        display: block;
+        width: 2px;
+        height: 2px;
+        background: #000;
+        &:nth-of-type(1) {
+          top: -4px;
+          left: -4px;
+        }
+        &:nth-of-type(2) {
+          top: -4px;
+          right: -4px;
+        }
+        &:nth-of-type(3) {
+          bottom: -4px;
+          right: -4px;
+        }
+        &:nth-of-type(4) {
+          bottom: -4px;
+          left: -4px;
+        }
+      }
+    }
+    &[data-progress="1"] {
+      .box {
+        &:nth-of-type(1) {
+          background: var(--white);
+        }
+      }
+    }
+    &[data-progress="2"] {
+      .box {
+        &:nth-of-type(1),
+        &:nth-of-type(2) {
+          background: var(--white);
+        }
+      }
+    }
+    &[data-progress="3"] {
+      .box {
+        &:nth-of-type(1),
+        &:nth-of-type(2),
+        &:nth-of-type(3) {
+          background: var(--white);
+        }
+      }
+    }
+    &[data-progress="4"] {
+      .box {
+        &:nth-of-type(1),
+        &:nth-of-type(2),
+        &:nth-of-type(3),
+        &:nth-of-type(4) {
+          background: var(--white);
+        }
+      }
+    }
+    &[data-progress="5"] {
+      .box {
+        background: var(--white);
+      }
+    }
+  }
+  .text {
+    margin-top: 12px;
+    font-family: var(--dot);
+    text-align: center;
+    line-height: 100%;
+    font-size: 16px;
+    color: var(--white);
+    -webkit-text-stroke: 1px var(--white);
+    letter-spacing: 1px;
+  }
+}
+
+// --------------------------
+
+// フレーム
+
+// --------------------------
+.l-frame {
+  pointer-events: none;
+  user-select: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+.c-flame {
+  position: absolute;
+  z-index: 0;
+  background: #000;
+}
+.c-flame-top {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 32px;
+  @include sp_w() {
+    height: 24px;
+  }
+}
+.c-flame-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 32px;
+  @include sp_w() {
+    height: 24px;
+  }
+}
+.c-flame-left {
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  @include sp_w() {
+    width: 24px;
+  }
+}
+.c-flame-right {
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  @include sp_w() {
+    width: 24px;
+  }
+}
+
+// --------------------------
+
+// WebGLコンテナ
+
+// --------------------------
+#world {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  background: radial-gradient(circle, #b3ffdb 0%, #b3ffdb 60%, #b2fffe 100%);
+}
+
+// --------------------------
+
+// タイトル
+
+// --------------------------
+.c-title {
+  pointer-events: none;
+  user-select: none;
+  position: fixed;
+  top: 10px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: max-content;
+  z-index: 2000;
+  @include sp_w() {
+    top: 5px;
+  }
+}
+.c-title__block {
+  display: block;
+  span {
+    display: inline-block;
+    font-family: var(--dot);
+    line-height: 100%;
+    font-size: 12px;
+    margin-right: 3px;
+    -webkit-text-stroke: 1px var(--white);
+    letter-spacing: 1.5px;
+  }
+}
+
+// --------------------------
+
+// コントローラー
+
+// --------------------------
+.l-controller {
+  position: fixed;
+  bottom: 10px;
+  right: 32px;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  @include sp_w() {
+    bottom: 6px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    gap: 16px;
+  }
+}
+
+// --------------------------
+
+// キー
+
+// --------------------------
+.l-key {
+  position: fixed;
+  bottom: 7px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  gap: 8px;
+  @include sp_w() {
+    display: block;
+    top: 0;
+    left: 3px;
+    right: initial;
+    bottom: 0;
+    margin: auto;
+    width: max-content;
+    height: max-content;
+  }
+}
+.c-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-family: var(--dot);
+  -webkit-text-stroke: 0.5px var(--white);
+  line-height: 100%;
+  font-size: 10px;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  border: solid 2px var(--white);
+  @include sp_w() {
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border: solid 1px var(--white);
+    margin-bottom: 16px;
+    &:nth-last-of-type(1) {
+      margin-bottom: 0;
+    }
+  }
+  @include hover() {
+    background: var(--white);
+    color: var(--black);
+    -webkit-text-stroke: 0.5px var(--black);
+  }
+}
+.c-key-up {
+  line-height: 40%;
+}
+
+// --------------------------
+
+// ボタン
+
+// --------------------------
+button {
+  margin: 0;
+  padding: 0;
+}
+.c-btnText {
+  display: flex;
+  align-items: center;
+  font-family: var(--dot);
+  -webkit-text-stroke: 1px var(--white);
+  letter-spacing: 1px;
+  color: var(--white);
+  font-size: 12px;
+  @include sp_w() {
+    font-size: 10px;
+  }
+  span {
+    pointer-events: none;
+    user-select: none;
+    display: inline-block;
+  }
+  @include hover() {
+    .c-btnText__arrow {
+      opacity: 1;
+    }
+  }
+}
+.c-btnText__arrow {
+  margin-right: 4px;
+  opacity: 0.5;
+}
+#js-frontViewBtn {
+  body[data-view="front"] & {
+    pointer-events: none;
+    user-select: none;
+  }
+  .c-btnText__arrow {
+    body[data-view="front"] & {
+      opacity: 1;
+    }
+  }
+}
+#js-backViewBtn {
+  body[data-view="back"] & {
+    pointer-events: none;
+    user-select: none;
+  }
+  .c-btnText__arrow {
+    body[data-view="back"] & {
+      opacity: 1;
+    }
+  }
+}
+#js-initViewBtn {
+  body[data-view="init"] & {
+    pointer-events: none;
+    user-select: none;
+  }
+  .c-btnText__arrow {
+    body[data-view="init"] & {
+      opacity: 1;
+    }
+  }
+}
+
+// --------------------------
+
+//  GitHubアイコン
+
+// --------------------------
+.c-github {
+  position: fixed;
+  bottom: 36px;
+  left: 36px;
+  z-index: 2000;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  @include sp_w() {
+    top: initial;
+    right: 28px;
+    bottom: 28px;
+    z-index: 2000;
+    width: 20px;
+    height: 20px;
+    display: none;
+  }
+  svg {
+    pointer-events: none;
+    user-select: none;
+    width: 100%;
+    height: 100%;
+  }
+  opacity: 1;
+  @include hover() {
+    opacity: 0.5;
+  }
+}
+
+// --------------------------
+
+// コピーライト
+
+// --------------------------
+.c-copyright {
+  position: fixed;
+  bottom: 11px;
+  left: 32px;
+  margin: auto;
+  z-index: 2000;
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: initial;
+  font-family: var(--dot);
+  line-height: 100%;
+  width: max-content;
+  height: max-content;
+  color: var(--white);
+  -webkit-text-stroke: 0.5px var(--white);
+  @include sp_w() {
+    top: 0;
+    left: initial;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    font-size: 10px;
+    transform: rotateZ(90deg) translate(0, -36px);
+    body.safari & {
+      transform: rotateZ(90deg) translate(0, -45px);
+    }
+  }
+  &::before {
+    pointer-events: none;
+    user-select: none;
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    z-index: 0;
+    transform: translate3d(0, 0, 0px);
+    height: 2px;
+    width: 100%;
+    background: var(--white);
+    transform: scale(0, 1);
+    @include sp_w() {
+      bottom: -4px;
+    }
+  }
+  @include hover() {
+    &::before {
+      transform: scale(1, 1);
+    }
+  }
+}
